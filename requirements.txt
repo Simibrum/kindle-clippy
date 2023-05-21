@@ -14,6 +14,8 @@ scikit-learn
 # For tests
 pytest
 pytest-mock
+coverage
+pytest-cov
 
 # For visualization
 matplotlib
