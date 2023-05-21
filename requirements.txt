@@ -1,0 +1,8 @@
+# Requirements
+
+# For AI / Text Embeddings
+openai
+tiktoken
+
+# For tests
+pytest
