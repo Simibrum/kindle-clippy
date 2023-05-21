@@ -1,21 +1,49 @@
 """Tests for initial functions. We can split these up in later refactoring."""
 import pandas as pd
+import pytest
 from logic.functions import (
     parse_clippings_to_dataframe, calculate_cost_of_embeddings, add_embeddings_to_dataframe,
-    run_similarity_query
+    run_similarity_query, parse_clippings_to_dict, dict_to_dataframe
 )
+from test_clipping_data import clipping_samples
 
 
-def test_parse_clippings_to_dataframe():
-    """Test for converting clippings text to dataframe."""
-    sample_clipping_text = ""  # fill this with an example from your clippings file
-    expected_output = {}  # fill this with what you expect the output dataframe row to look like
-
+@pytest.mark.parametrize('sample_clipping_text, expected_output', clipping_samples)
+def test_parse_clippings_to_dict(sample_clipping_text, expected_output):
     # Act
-    output_dataframe = parse_clippings_to_dataframe(sample_clipping_text)
+    output_dict = parse_clippings_to_dict(sample_clipping_text)
 
     # Assert
-    assert output_dataframe.equals(expected_output)
+    assert output_dict == expected_output
+
+
+@pytest.mark.parametrize('sample_dict', [b for a, b in clipping_samples])
+def test_dict_to_dataframe(sample_dict):
+    # Act
+    output_df = dict_to_dataframe(sample_dict)
+
+    # Assert
+    # Check that the output is a DataFrame
+    assert isinstance(output_df, pd.DataFrame)
+
+    # Check that the DataFrame has the right shape
+    assert output_df.shape[0] == len(sample_dict)
+    assert output_df.shape[1] == 5  # We have 5 fields: 'book', 'author', 'location', 'date_added', 'clipping_text'
+
+    # Check that the DataFrame has the right columns
+    expected_columns = ['book', 'author', 'location', 'date_added', 'clipping_text']
+    assert all([column in output_df.columns for column in expected_columns])
+
+
+@pytest.mark.parametrize('sample_clipping_text, expected_output', clipping_samples)
+def test_parse_clippings_to_dataframe(sample_clipping_text, expected_output):
+    # Act
+    output_df = parse_clippings_to_dataframe(sample_clipping_text)
+
+    # Assert
+    assert isinstance(output_df, pd.DataFrame)
+    assert len(output_df) == len(expected_output)
+    assert list(output_df.columns) == ['book', 'author', 'location', 'date_added', 'clipping_text']
 
 
 def test_calculate_cost_of_embeddings():
@@ -57,5 +85,4 @@ def test_run_similarity_query():
     # Assert
     # check that output is within the dataframe
     assert output in sample_dataframe['clippings'].values
-
 
