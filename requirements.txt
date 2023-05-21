@@ -10,6 +10,7 @@ pandas
 numpy
 scipy
 scikit-learn
+tables
 
 # For tests
 pytest
@@ -19,3 +20,4 @@ pytest-cov
 
 # For visualization
 matplotlib
+tqdm

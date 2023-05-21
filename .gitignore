@@ -161,3 +161,6 @@ cython_debug/
 
 # Ignore specify clipping files
 My Clippings.txt
+# Any saved files
+*.h5
+*.csv

@@ -23,4 +23,5 @@ def test_calculate_cost_of_embeddings():
             'Third clipping'
         ]
     })
-    assert calculate_cost_of_embeddings(df) == pytest.approx(2.4e-06, abs=1e-9)
+    # assert calculate_cost_of_embeddings(df) == pytest.approx(2.4e-06, abs=1e-9)
+    assert calculate_cost_of_embeddings(df) == '$0.01'

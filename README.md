@@ -4,6 +4,17 @@ Converting your Kindle clippings into a searchable vector database.
 
 You will need an OpenAI account with an API-KEY.
 
+## Usage
+Paste your "My Clippings.txt" file into the root directory of this project.
+
+Then in a Python interpreter in a virtual environment with the requirements installed:
+```python
+from logic.processing.text_parsing import parse_clippings_file_to_dataframe
+from logic.processing.token_analysis import calculate_cost_of_embeddings
+df = parse_clippings_file_to_dataframe("My Clippings.txt")
+cost = calculate_cost_of_embeddings(df); print(cost)
+```
+
 ## Obtaining Your Clippings
 
 Clippings are stored on the Kindle device in a text file called "My Clippings.txt". This can be big if you read a lot (mind is 10.6MB).

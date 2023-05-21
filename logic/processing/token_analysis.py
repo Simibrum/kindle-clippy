@@ -1,5 +1,6 @@
 import pandas as pd
 import tiktoken
+import math
 
 
 def count_total_tokens(df: pd.DataFrame,
@@ -31,7 +32,7 @@ def count_total_tokens(df: pd.DataFrame,
 
 def calculate_cost_of_embeddings(df: pd.DataFrame,
                                  text_column: str = 'clipping_text',
-                                 encoding_name: str = "cl100k_base") -> float:
+                                 encoding_name: str = "cl100k_base") -> str:
     """
     Calculates the cost of obtaining embeddings for a dataframe of text.
 
@@ -48,8 +49,11 @@ def calculate_cost_of_embeddings(df: pd.DataFrame,
 
     # Compute the cost in dollars
     cost = (total_tokens / 1000) * 0.0004
+    # Round up to the nearest cent
+    rounded_cost = math.ceil(cost * 100) / 100
+    cost_str = f'${rounded_cost:.2f}'
 
-    return cost
+    return cost_str
 
 
 def count_tokens(text: str, encoding_name: str = "cl100k_base") -> int:
