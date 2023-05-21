@@ -4,5 +4,9 @@
 openai
 tiktoken
 
+# For data processing
+pandas
+numpy
+
 # For tests
 pytest
