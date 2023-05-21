@@ -3,10 +3,17 @@
 # For AI / Text Embeddings
 openai
 tiktoken
+plotly
 
 # For data processing
 pandas
 numpy
+scipy
+scikit-learn
 
 # For tests
 pytest
+pytest-mock
+
+# For visualization
+matplotlib
