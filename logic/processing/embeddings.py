@@ -13,6 +13,18 @@ from config.init_logger import logger
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 
+def convert_array_to_string(array):
+    """Convert a numpy array to a string representation.
+
+    Args:
+        array: The numpy array to convert.
+
+    Returns:
+        A string representation of the array.
+    """
+    return np.array2string(array, separator=",")[1:-1]
+
+
 def get_embedding(
         text: List[str],
         model: str = "text-embedding-ada-002",
@@ -41,7 +53,7 @@ def add_embeddings_to_dataframe(
         api_key: str = openai_api_key,
         progress_bar: bool = True,
         save_interval: int = 100,
-        save_path: str = "progress_temp.csv",
+        save_path: str = "progress_temp.pkl",
         retry_on_error: bool = True,
         batch_size: int = 10
 ) -> pd.DataFrame:
@@ -95,17 +107,17 @@ def add_embeddings_to_dataframe(
 
                 for j in range(len(batch_embeddings)):
                     index = processed_rows[-offset] + j
-                    df[embedding_column].loc[index] = np.array(batch_embeddings[j])
+                    df.at[index, embedding_column] = batch_embeddings[j]
 
                 # Save progress
                 if len(processed_rows) % save_interval == 0 and len(processed_rows) > 0:
-                    df.to_csv(save_path, index=False)
+                    df.to_pickle(save_path)
         except Exception as e:
             logger.error(f"Error processing row {i}: {e}")
             error_rows.append(i)
 
     # Save final progress
-    df.to_csv(save_path, index=False)
+    df.to_pickle(save_path)
 
     # Retry error rows
     # Retry processing rows that threw exceptions
@@ -114,7 +126,7 @@ def add_embeddings_to_dataframe(
             try:
                 text = df.loc[row, text_column]
                 embeddings = get_embedding([text], model, api_key)
-                df.loc[row, embedding_column] = np.array(embeddings[0])
+                df.at[row, embedding_column] = embeddings[0]
             except Exception as e:
                 # Handle the error, e.g., print an error message or perform error-specific actions
                 pass
