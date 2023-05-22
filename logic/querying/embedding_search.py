@@ -2,15 +2,16 @@
 
 from openai.embeddings_utils import cosine_similarity
 import pandas as pd
-from logic.processing.embeddings import get_embedding
+from logic.processing.embeddings import get_embedding, openai_api_key
 
 
 def run_similarity_query(
         df: pd.DataFrame,
         query_text: str,
-        embedding_column: str,
+        embedding_column: str = "embedding",
         n: int = 3,
-        pprint: bool = True
+        pprint: bool = True,
+        api_key: str = openai_api_key
 ) -> pd.DataFrame:
     """
     Runs a similarity query on a dataframe using a query text.
@@ -21,12 +22,13 @@ def run_similarity_query(
         embedding_column: The name of the column containing the embeddings in the dataframe.
         n: The number of top results to return. Default is 3.
         pprint: Whether to pretty print the resulting dataframe. Default is True.
+        api_key: The OpenAI API key to use for embeddings. Default is the value of the OPENAI_API_KEY environment.
 
     Returns:
         The top matching rows from the dataframe based on cosine similarity.
     """
     # Get the embedding for the query text
-    query_embedding = get_embedding(query_text, model='text-embedding-ada-002')
+    query_embedding = get_embedding([query_text], api_key=api_key)[0]
 
     # Calculate cosine similarity between embeddings
     df['similarities'] = df[embedding_column].apply(lambda x: cosine_similarity(x, query_embedding))

@@ -22,7 +22,7 @@ def test_run_similarity_query(mocker):
     })
 
     # Mock the get_embedding function
-    mocker.patch('logic.querying.embedding_search.get_embedding', return_value=[0.1, 0.2, 0.3])
+    mocker.patch('logic.querying.embedding_search.get_embedding', return_value=[[0.1, 0.2, 0.3]])
 
     # Call the run_similarity_query function
     result_df = run_similarity_query(
