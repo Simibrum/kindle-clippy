@@ -32,8 +32,10 @@ def parse_clippings_to_dict(clipping_text: str) -> List[dict]:
     # Convert matches to a dictionary
     clippings_dict = []
     for match in matches:
+        # Notes and Bookmarks are currently not supported - these need to be cleaned from book
+        book = match[0] if "\n" not in match[0] else match[0].split("\n")[-1]
         clippings_dict.append({
-            'book': match[0],
+            'book': book,
             'author': match[1],
             'location': match[2],
             'date_added': match[3],
